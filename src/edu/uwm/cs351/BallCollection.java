@@ -9,8 +9,13 @@ import java.util.function.Consumer;
  * specialized to {@link Ball} objects.
  * The implementation uses dynamic arrays.
  */
-public class BallCollection // TODO: extends something
+public class BallCollection extends AbstractCollection<Ball>// TODO: extends something
 {
+	public Ball[] data;
+	public int manyItems;
+	public int version;
+	private static Consumer<String> reporter = (s) -> System.out.println("Invariant error: "+ s);
+
 	private BallCollection(boolean ignored) {} // do not change this constructor
 
 	// TODO: dynamic array data structure + version
@@ -25,10 +30,40 @@ public class BallCollection // TODO: extends something
 		return new MyIterator();
 	}
 	
+	private boolean wellFormed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	private class MyIterator // TODO: implements something
 	implements Iterator<Ball> // 3#
 	{
+		public int index;
+		public boolean canRemove;
+		public int colVersion;
+
 		MyIterator(boolean ignored) {} // should only be used by Spy
+
+		public MyIterator() {
+			// TODO Auto-generated constructor stub
+		}
+
+		public boolean wellFormed() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public Ball next() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 		
 		// TODO: data structure including local version
 		// Implement invariant, constructor and required methods.
@@ -105,5 +140,11 @@ public class BallCollection // TODO: extends something
 		public boolean wellFormed(Iterator<Ball> i) {
 			return ((MyIterator)i).wellFormed();
 		}
+	}
+
+	@Override
+	public int size() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
