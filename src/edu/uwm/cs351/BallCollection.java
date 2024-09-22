@@ -26,7 +26,7 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 	// and test it at the start of all public methods, and at the end
 	// of public methods that make changes.
 	// We recommend that you copy much from BallSeq in HW #2 solution
-	
+
 	public BallCollection( )
 	{
 		// NB: NEVER assert the invariant at the START of the constructor.
@@ -37,18 +37,18 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 		assert wellFormed() : "Invariant false at end of constructor";
 	}
 
-	
+
 	private boolean report(String error) {
 		reporter.accept(error);
 		return false;
 	}
-	
+
 	@Override // required
 	public Iterator<Ball> iterator() {
 		assert wellFormed() : "invariant broken at start of iterator()";
 		return new MyIterator();
 	}
-	
+
 	private boolean wellFormed() {
 		// TODO Auto-generated method stub
 		// Check the invariant.
@@ -67,7 +67,7 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 
 		// If no problems discovered, return true
 		return true;
-}
+	}
 
 	private class MyIterator // TODO: implements something
 	implements Iterator<Ball> // 3#
@@ -80,9 +80,9 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 
 		public MyIterator() {
 			this.index = 0;
-			this.canRemove = true;
+			this.canRemove = false;
 			this.colVersion = version;
-			
+
 		}
 
 		public boolean wellFormed() {
@@ -91,7 +91,7 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 			if(BallCollection.this.version != colVersion) return true;
 			if(index >= manyItems || index < -1) return report("The index field is a invalid index in the dynamic array, or equal not to -1");
 			if(canRemove && index < 0) return report("the index is not a valid index ");
-			
+
 			return true;
 		}
 
@@ -110,21 +110,38 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 			if(!hasNext()) throw new NoSuchElementException();
 			canRemove = true;
 			return data[index++];
-			
 		}
 
 		@Override
 		public void remove() {
-			// TODO Auto-generated method stub
+			
+			if(version!=colVersion) throw new ConcurrentModificationException();
+			
+
+			// You will need to shift elements in the array.
+			if(!canRemove) throw new IllegalStateException("There is no current element: ");
+		
+			if(canRemove) {
+				//shifiting the elements of array to the left until the current element is reached as it is to be removed
+				for(int i=index-1;i<manyItems-1;i++) {
+					data[i] = data[i+1];
+				}
+				data[--manyItems]=null;
+				index--;
+				version++;
+				colVersion = version;
+				canRemove = false;
 				
-		}	
+
+			}	
+		}
 	}
 	@Override
 	public int size() {
 		assert wellFormed() : "Invariant failed at the start of size()";
 		return manyItems;
 	}
-	
+
 	@Override
 	public boolean add(Ball b) {
 		assert wellFormed() : "invariant failed at start of insert";
@@ -146,6 +163,7 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 		return true;
 
 	}
+
 	/**
 	 * Used for testing the invariant.  Do not change this code.
 	 */
@@ -181,7 +199,7 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 			result.version = v;
 			return result;
 		}
-		
+
 		/**
 		 * Return an iterator for testing purposes.
 		 * @param bc main class instance to use
@@ -197,7 +215,7 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 			result.colVersion = v;
 			return result;
 		}
-		
+
 		/**
 		 * Return whether debugging instance meets the 
 		 * requirements on the invariant.
@@ -207,7 +225,7 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 		public boolean wellFormed(BallCollection bs) {
 			return bs.wellFormed();
 		}
-		
+
 		/**
 		 * Return whether debugging instance meets the 
 		 * requirements on the invariant.
@@ -217,7 +235,6 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 		public boolean wellFormed(Iterator<Ball> i) {
 			return ((MyIterator)i).wellFormed();
 		}
-	
+
 	}
 }
-	
