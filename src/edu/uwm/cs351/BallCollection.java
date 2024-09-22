@@ -97,15 +97,20 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 
 		@Override
 		public boolean hasNext() {
-			return canRemove;
 			// TODO Auto-generated method stub
+			if(version!=colVersion) throw new ConcurrentModificationException();
+			return index < manyItems;
 
 		}
 
 		@Override
 		public Ball next() {
-			return null;
 			// TODO Auto-generated method stub
+			if(version!=this.colVersion) throw new ConcurrentModificationException();
+			if(!hasNext()) throw new NoSuchElementException();
+			canRemove = true;
+			return data[index++];
+			
 		}
 
 		@Override
