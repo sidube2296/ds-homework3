@@ -99,22 +99,47 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 		public boolean hasNext() {
 			return canRemove;
 			// TODO Auto-generated method stub
-			
-			
+
 		}
 
 		@Override
 		public Ball next() {
 			return null;
 			// TODO Auto-generated method stub
-			
 		}
-		
+
 		@Override
 		public void remove() {
 			// TODO Auto-generated method stub
 				
 		}	
+	}
+	@Override
+	public int size() {
+		assert wellFormed() : "Invariant failed at the start of size()";
+		return manyItems;
+	}
+	
+	@Override
+	public boolean add(Ball b) {
+		assert wellFormed() : "invariant failed at start of insert";
+
+		if(data.length == manyItems) {
+			Ball[] biggerArray;
+			int newCapacity = 2*data.length+1;
+			biggerArray = new Ball[newCapacity];
+			//Copy all the elements in data array to new array
+			for(int i=0;i<manyItems;++i) {
+				biggerArray[i] = data[i];		
+			}
+			data = biggerArray;
+		}
+		data[manyItems++] = b;
+		version++;
+
+		assert wellFormed() : "invariant failed at end of insert";
+		return true;
+
 	}
 	/**
 	 * Used for testing the invariant.  Do not change this code.
@@ -188,11 +213,6 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 			return ((MyIterator)i).wellFormed();
 		}
 	
-	}
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }
 	
