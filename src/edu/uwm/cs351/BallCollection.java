@@ -131,8 +131,6 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 				version++;
 				colVersion = version;
 				canRemove = false;
-				
-
 			}	
 		}
 	}
@@ -162,6 +160,20 @@ public class BallCollection extends AbstractCollection<Ball>// TODO: extends som
 		assert wellFormed() : "invariant failed at end of insert";
 		return true;
 
+	}
+	
+	@Override
+	public void clear() {
+	    assert wellFormed() : "Invariant failed at start of clear()";
+
+	    if (manyItems > 0) {
+	        int newCapacity = Math.max(INITIAL_CAPACITY, data.length / 2); // Reduce capacity to half, but not below initial
+	        data = new Ball[newCapacity];
+	        manyItems = 0;  // Reset the count of items
+	        version++;  // Increment the version to indicate the collection has been modified
+	    }
+
+	    assert wellFormed() : "Invariant failed at end of clear()";
 	}
 
 	/**
