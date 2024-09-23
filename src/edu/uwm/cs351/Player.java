@@ -16,7 +16,7 @@ public class Player{
 	 *
 	 * @param loc the initial location
 	 */
-	public Player(Point loc){location=loc;radius = GetBall.PLAYER_RADIUS;}
+	public Player(Point loc){location=loc;radius = DodgeBall.PLAYER_RADIUS;}
 	
 	/**
 	 * Sets the current image.
@@ -39,7 +39,7 @@ public class Player{
 	 * @return true if colliding
 	 */
 	public boolean isColliding(Ball b){
-		return GetBall.MORTAL && location.distance(b.getLoc()) <= (radius + b.getRadius());}
+		return DodgeBall.MORTAL && location.distance(b.getLoc()) <= (radius + b.getRadius());}
 	
 	/**
 	 * Update the player's location.
