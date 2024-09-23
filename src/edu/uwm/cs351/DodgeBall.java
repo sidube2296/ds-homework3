@@ -53,7 +53,7 @@ public class DodgeBall implements Runnable{
 	private DodgeBallPanel panel;
 	private JLabel displayClock;
 	private Player player;
-	private Ball[] balls; // TODO: Change to be a BallCollection
+	private BallCollection balls; // TODO: Change to be a BallCollection
 	private Ball deathBall;
 	private int level;
 	private int ballCount;
@@ -112,7 +112,7 @@ public class DodgeBall implements Runnable{
 	private void nextLevel(){
 		suspended = true;
 		level++;
-		balls = new Ball[ballCount]; // TODO: change to be a collection
+		balls = new BallCollection(); // TODO: change to be a collection
 		for (int i=0; i<ballCount; i++)
 			createBall(i);
 		startTime = Instant.now().plus(Duration.ofSeconds(COUNTDOWN));
@@ -142,13 +142,12 @@ public class DodgeBall implements Runnable{
 	private void createBall(int index){
 		Ball newBall;
 		while (!validLocation(newBall = randomBall())) {}
-		balls[index] = newBall; // TODO: change to add to collection
+		balls.add(newBall); // TODO: change to add to collection
 	}
 	
 	private boolean validLocation(Ball newBall){
 		// TODO: Change to use collection methods
-		for (int i=0; i < balls.length; ++i){
-		    Ball b= balls[i];
+		for (Ball b : balls){
 			if (b == null) continue;
 			if (b.isColliding(newBall)) return false;
 		}
@@ -173,8 +172,7 @@ public class DodgeBall implements Runnable{
 		player.update(getAdjustedMouseLoc());
 		//update balls
 		// TODO: change to use Collection methods
-		for (int i = 0; i < balls.length; ++i) {
-			Ball b = balls[i];
+		for (Ball b : balls) {
 			b.step();
 		}
 		if (!suspended){
@@ -189,8 +187,7 @@ public class DodgeBall implements Runnable{
 		else if (Instant.now().isBefore(stopTime)){
 			if (suspended){
 				suspended = false;
-				for (int i = 0; i < balls.length; ++i) {
-					Ball b = balls[i];
+				for (Ball b : balls) {
 					b.launch();
 				}
 			}
@@ -221,10 +218,8 @@ public class DodgeBall implements Runnable{
 	private void checkCollisions(){
 		// TODO: Change to use Collection methods.
 		// NB: You *can* use nested loops on the same collection
-		for (int i = 0; i < balls.length; ++i){
-			Ball a = balls[i];
-			for (int j = 0; j < balls.length; ++j){
-				Ball b = balls[j];
+		for (Ball a : balls ){
+			for (Ball b : balls){
 				if (a != b && a.isColliding(b))
 					a.bounce(b);
 			}
@@ -235,8 +230,7 @@ public class DodgeBall implements Runnable{
 	//Check if the player was hit by any balls
 	private void checkGameOver(){
 		// TODO: change to use Collection methods
-		for (int i = 0; i < balls.length; ++i) {
-			Ball b = balls[i];
+		for (Ball b : balls) {
 			if (player.isColliding(b)){
 				deathBall = b;
 				gameover();
@@ -281,8 +275,7 @@ public class DodgeBall implements Runnable{
 			
 			//draw game entities
 			// TODO: Change to use Collection methods
-			for (int i = 0; i < balls.length; ++i) {
-				Ball b = balls[i];
+			for (Ball b : balls) {
 				b.draw(g);
 			}
 			player.draw(g);
